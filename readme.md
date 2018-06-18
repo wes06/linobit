@@ -8,23 +8,58 @@ This paper explores the decision making process of designing Linobit, a scaled d
 
 
 
+#### DESCRIPTION AND MOTIVATION
+As computational devices evolve, more tools and interfaces are built between the user and the machine. This allows us to complete increasingly complex tasks without having to focus so much on understanding the nuances of the machine. While this movement is certainly overall positive, one of the drawbacks is that people no longer learn the fundamental processes and concepts which allow the tool to work. Added to that, by neglecting history, we forget the alternatives of the technologies that we use today - forgotten alternatives that maybe once were the status quo. Understanding of those alternatives would give us a broader view of the pros and cons of what we have today, how they superseded their ancestors and what are their pitfalls - important knowledge for those who design possible futures.
+
+Its with these preocupations in mind that Linobyte came into existence. It conciliates the explanation of how bits, bytes and chars work, with a hands on experience of creating Core Rope ROMs: read-only memories that were written by weaving an enameled copper wire through ferrite cores.
+
+
+### HOW TO USE IT
+The whole process is quite straightforward, and the result is immediate: the user can write up to 8 characters. Each character consists of one eight-bit byte. Each core represents one bit, and by weaving the conductive wire through the core center, the user sets a bit as positive. By skipping the core, its set as zero. 
+
+So, if the user wants to write the “A” character, the steps should be the following:
+
+Find out the binary value in ASCII of the “A” character by checking on the ASCII table (provided with the device): “A” in ASCII is  01000001 in binary.
+Figure out which bits have to be set in the “Char” board: the first bit (least significant), or bit 0. And the seventh bit, bit 6.
+
+Weave a wire through the respective coils: zero and six.
+
+Check the character on the display and proceed to the next character.
 
 
 
-### Introduction to Linobyte and Linobit
+### DESIGN, FABRICATION AND DOCUMENTATION
+As important as the device in itself, is the documentation of how it came into existence. The blueprints and schematics not only allow the device to be better understood and even reproduced, but they also give insight into the design decisions that give the object its character.
 
-"As computational devices evolve, more tools and interfaces are built between the user and the machine. This allows us to complete increasingly complex tasks without having to focus so much on understanding the nuances of the machine. While this movement is certainly overall positive, one of the drawbacks is that people no longer learn the fundamental processes and concepts which allow the tool to work. Added to that, by neglecting history, we forget the alternatives of the technologies that we use today - forgotten alternatives that maybe once were the status quo. Understanding of those alternatives would give us a broader view of the pros and cons of what we have today, how they superseded their ancestors and what are their pitfalls - important knowledge for those who design possible futures.
+Documentation was made in three main levels: 
 
-Its with these preocupations in mind that Linobyte came into existence. It conciliates the explanation of how bits, bytes and chars work, with a hands on experience of creating Core Rope ROMs: read-only memories that were written by weaving an enameled copper wire through ferrite cores."
+#### 1 - Usage
+This gives a brief introduction of how the device is used, and thus a very clear and immediate visualization of cause/effect in core rope ROMs. While this does not provide a technical explanation of how it works, it gives a fast point of correlation for the public in general to start decoding its workings.
 
-https://github.com/wes06/linobyte
+#### 2 - Making of
+This goes through the process of designing, fabricating and assemblying Linobyte, in a step-by-step, quick and visually enticing manner. For those who had some interest in the device, this provides a bit more background on its construction, and allows for a slow and steady movement into more technical and specific information.
 
-### Introduction to Core Rope ROMs
+#### 3 - Online repository
+This is where the full documentation of Linobyte lies. Descriptions of all the main decisions and the comprimises that were taken or not,  technical and historical references, design files and similar projects.
+
+Those who are really interested in any aspect of the project can find more information here and most likely threads which he/she can follow towards other types of interfaces and memories.
+
+
+
+
+
+### HISTORY AND TECHNICAL INFORMATION
+
+
+#### Introduction to Core Rope ROMs
 
 Core Rope Read Only Memories were devices used by computers in the 60s and 70s to store permanent information. They were a fast and robust alternative to other memories of the time (punched cards and ) and were used in historically famous computers such as the AGC - Apollo Guidance Computer. In the case of space bound applications, the ruggedness of Core Rope ROMs against cosmic radiation made them a reliable choice. Despite these positive aspects though, they were extremely labourious to build - the information was encoded through hand winding of an enameled copper wire into ferrite toroids. (It was referred to as "LOL" memory by MIT programmers: Little Old Lady memory). It was such a labourious process that during the development process they had "Core rope ROM Simulators", devices where they would encode the prototypal information to test the final computer.
 
 
-### Main drawbacks of Linobyte
+
+
+
+#### Downsizing Linobyte
 
 Linobyte was developed in the context of Media Archeology class
 
@@ -39,13 +74,32 @@ Linobit was born to address these issues, striping down unnecessary and redundan
 
 In Linobit, since the amount of coils is greatly reduced (from 64 to 4) it is easier to experiment with latches and syncronous execution processes. Therefore, the coil is not driven by an oscillator that is permanently on but instead by a single pulse that is triggered by the press of the button. The pulse then passes through the transformers that are "set" and sets the latches on the secondary side. Instead of the linobyte approach of using a rectifier charging a capacitor - needing multiple pulses to reach the trigger level - the rectifier triggers the SR Latch with a single pulse. (This was the approach used in the Apollo Guidance Computer, as the schematics indicate:)
 
-In essence while Linobyte works as a device in smaller contexts with more intimate publics, its not built for public or participatory exhibitions due to its complexity and frailty.
-
-### Linobit design decisions
-
-Going through the design decisions should be a better way of describing the goal of
+In essence while Linobyte works as a device in smaller contexts with more intimate publics, its not built for public or participatory exhibitions due to its complexity.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------
 
 #### Number of coils and display
 
@@ -118,6 +172,11 @@ https://www.youtube.com/watch?v=ndvmFlg1WmE
 The priority is to make the core rope rom more transparent, not the screen
 
 Ratio of transistors per black box: 4:1 for SR Latch, 80:1 for 4-10 decoder
+
+
+
+
+
 
 
 
