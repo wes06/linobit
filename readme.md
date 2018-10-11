@@ -27,6 +27,10 @@ Weave a wire through the respective coils: zero and six.
 Check the character on the display and proceed to the next character.
 
 
+### First prototype:
+
+<img src="./Images/linobit-2018OCT.png">
+
 
 ### DESIGN, FABRICATION AND DOCUMENTATION
 As important as the device in itself, is the documentation of how it came into existence. The blueprints and schematics not only allow the device to be better understood and even reproduced, but they also give insight into the design decisions that give the object its character.
