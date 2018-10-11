@@ -1,0 +1,25 @@
+Output: Gerber Files
+Type  : Gerber
+From  : Variant [[No Variations]] of PCB Document [linobit-PCB.PcbDoc]
+   Generated File[linobit-PCB.GTO]
+   Generated File[linobit-PCB.GTP]
+   Generated File[linobit-PCB.GTP1]
+   Generated File[linobit-PCB.GTS1]
+   Generated File[linobit-PCB.GTS]
+   Generated File[linobit-PCB.GTL]
+   Generated File[linobit-PCB.GBL]
+   Generated File[linobit-PCB.GBS1]
+   Generated File[linobit-PCB.GBS]
+   Generated File[linobit-PCB.GBO]
+   Generated File[linobit-PCB.GM5]
+   Generated File[linobit-PCB.GPT]
+   Generated File[linobit-PCB.GPB]
+   Generated File[linobit-PCB.RUL]
+   Generated File[linobit-PCB.EXTREP]
+   Generated File[linobit-PCB.REP]
+
+
+Files Generated   : 16
+Documents Printed : 0
+
+Finished Output Generation At 4:14:42 AM On 10/11/2018

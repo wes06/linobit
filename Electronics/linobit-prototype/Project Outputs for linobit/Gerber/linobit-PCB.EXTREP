@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------------------
+Gerber File Extension Report For: linobit-PCB.GBR   10/11/2018  4:14:42 AM
+------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------
+Layer Extension     Layer Description                      
+------------------------------------------------------------------------------------------
+.GTL                Top Layer                               
+.GBL                Bottom Layer                            
+.GPB                Bottom Pad Master                       
+.GPT                Top Pad Master                          
+.GTO                Top Overlay                             
+.GTP                Top Paste                               
+.GTP1               Top Paste                               
+.GTS                Top Solder                              
+.GBS                Bottom Solder                           
+.GBS1               Bottom Solder                           
+.GTS1               Top Solder                              
+.GBO                Bottom Overlay                          
+.GM5                Mechanical 5                            
+------------------------------------------------------------------------------------------
