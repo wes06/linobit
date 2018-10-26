@@ -1,21 +1,22 @@
 # Linobit
-## A recreational core rope ROM device
+## A core rope ROM device
 
-### First prototype:
+<img src="./Images/_DSC1651_low.jpg" width="400" height="400" title="First Prototype" align="right">
 
-<img src="./Images/_DSC1651_low.jpg">
-
-<img src="./Images/linobit-2018OCT.png">
+<!--img src="./Images/linobit-2018OCT.png"  height="370" align="right"-->
 
 
 ### Table of Contents
 
  - [Description and Motivation](#description-and-motivation)
- - How to use it
- - Design, Fabrication and Documentation
- - History and Technical Documentation
- - Functional Blocks
- - References
+ - [How to use it](#how-to-use-it)
+ - [Design, Fabrication and Documentation](#design-fabrication-and-documentation)
+ - [History and Technical Documentation](#history-and-technical-documentation)
+ - [Functional Blocks](#functional-blocks)
+ - [References](#references)
+
+
+
 
 ### Abstract:
 
@@ -115,11 +116,27 @@ An SR Latch does exactly that. It has two inputs, SET and RESET. Whenever the SE
 
 
 
-## Functional Blocks
+## FUNCTIONAL BLOCKS
 
-### Coil Drive
+<img src="./Images/linobit-block-diagram.png">
 
-HC138 decoder via series capacitor. So 3 pins on the MCU control 8 wires.
+### Microcontroller
+
+The brain of Linobit, controls all the operations, from driving the coils, to reading the information back and controlling the display. It boots, and goes to sleep. Wake button removes it from sleep, it does its tasks (drive the decoder, reads the coils, sets the display) and goes back to sleep.
+
+### 3-8 Decoder
+
+In order to drive the coils, a 3-8 decoder was chosen (HC138). It allows 3 pins on the microcontroller to control 8 output pins on the decoder. The 3 pins represent 3 bits of a decimal value, the decimal value is the driven pin: 
+
+ - 000 - pin 0 - 0000000H
+ - 00H - pin 1 - 000000H0
+ - 0H0 - pin 2 - 00000H00
+ - 0HH - pin 3 - 0000H000
+ - (...)
+ - HHH - pin 7 - H0000000
+
+ We use a capacitor in series with the decoder output to prevent it from trying to drive a short-circuit.
+
 
 ### SR Latch
 
@@ -128,6 +145,22 @@ SR stands for SET and RESET, that are the two inputs on this circuit.
 The way an SR Latch works is: as soon as the SET output receives a positive pulse from the cores, its output will stay high until the reset part receives a positive pulse. This allows the microcontroller to read the status of the coils on its own timing instead of having to detect the pulses.
 
 There is only one coil connected to the input of the microcontroller. The microcontroller has 2 interrupts, one for a coil and another for the wake up button. SR Latches com in single, dual, quad packages. So quad SR latch + an interrupt was perfect.
+
+
+Here follows a breakdown of the signals:
+
+<img src="./Images/linobit-scope.png">
+
+
+**Yellow:** The decoder pulses the drive wire through a capacitor.
+
+**Light blue:** Waveform that comes out out of the ferrite toroid coil.
+
+**Purple:** SR Latch gets triggered and maintains the HIGH state long after the pulse was gone.
+
+**Dark Blue:** After the microcontroller reads the coils, it drives the RST signal HIGH, resetting the output of the Latch (Purple)
+
+Note that the pulse (Light blue) takes around 1 micro Second ( ~ 6 horizontal divisions, 200nS each, times six, approx 1.2uS), and the Microcontroller takes about 400 micro Seconds to drive the Reset pulse High. So the scale of speed of the pulse is a lot faster than the microcontroller can handle using normal polling, hence the SR Latch. 
 
 ### Display
 
