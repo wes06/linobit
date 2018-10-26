@@ -8,6 +8,14 @@
 <img src="./Images/linobit-2018OCT.png">
 
 
+### Table of Contents
+
+ - [Description and Motivation](#description-and-motivation)
+ - How to use it
+ - Design, Fabrication and Documentation
+ - History and Technical Documentation
+ - Functional Blocks
+ - References
 
 ### Abstract:
 
