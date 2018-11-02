@@ -25,6 +25,8 @@
 
 #include <Arduino.h>
 #include <avr/sleep.h>
+#include <avr/wdt.h>
+
 
 #include <Wire.h>
 
@@ -33,13 +35,15 @@
 Adafruit_SSD1306 display(OLED_RESET);
 
 
+bool readCoilsPress = false;
 
 
+uint8_t sleepLength = 2;
 
 //###############################
 //  Char Array
 //###############################
-uint8_t charBeingRead = 9;
+//uint8_t charBeingRead = 9;
 uint8_t chars[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 char intToChar[] = {
@@ -67,6 +71,7 @@ void coil5interrupt() {
 //###############################
 void wake ()
 {
+  readCoilsPress = true;
   sleep_disable(); // cancel sleep as a precaution
   detachInterrupt (0); // precautionary while we do other stuff
 }
@@ -76,7 +81,25 @@ void wake ()
 //###############################
 //  Sleep Func
 //###############################
-void goToSleep() {
+void goToSleep(uint8_t _mode) {
+
+  if (_mode == 1) {
+
+    // clear various "reset" flags
+    MCUSR = 0;
+    // allow changes, disable reset
+    WDTCSR = bit (WDCE) | bit (WDE);
+    // set interrupt mode and an interval
+    WDTCSR = bit (WDIE) | bit (WDP1) | bit (WDP2) | bit (WDP3);// | bit (WDP1) | bit (WDP2);
+
+    wdt_reset();  // pat the dog
+
+    MCUCR = bit (BODS) | bit (BODSE);
+    MCUCR = bit (BODS);
+
+  }
+
+
   set_sleep_mode (SLEEP_MODE_PWR_DOWN);
   sleep_enable();
 
@@ -105,12 +128,15 @@ void goToSleep() {
 //  Set decoder outputs
 //###############################
 void setDecoder(uint8_t _decode) {
-  if(_decode == 0b100) _decode = 001;
-  else if(_decode == 0b001) _decode = 100;
-  else if(_decode == 0b110) _decode = 0b011;
-  else if(_decode == 0b011) _decode = 0b110;
-  
+  if (_decode == 0b100) _decode = 001;
+  else if (_decode == 0b001) _decode = 100;
+  else if (_decode == 0b110) _decode = 0b011;
+  else if (_decode == 0b011) _decode = 0b110;
+
+
   PORTD = (_decode << 5);
+  PORTB &= ~_BV(PB0); // LOW - enable decoder
+  PORTB |= _BV(PB0); // HIGH - disable decoder
 }
 
 
@@ -137,9 +163,9 @@ uint8_t readCoils() {
   }
 
   //reset Latch
-  digitalWrite(10, HIGH);
-  //delay(1);
-  digitalWrite(10, LOW);
+  PORTB |= _BV(PB2); // digitalWrite(10, HIGH);
+  delay(1);
+  PORTB &= ~_BV(PB2); //digitalWrite(10, LOW);
 
   return _charSum;
 }
@@ -155,7 +181,7 @@ void setupIO() {
   pinMode(2, INPUT_PULLUP); // button interrupt pull-up
 
   pinMode(8, OUTPUT);
-  digitalWrite(8, LOW); // enable 3-8 decoder
+  digitalWrite(8, HIGH); // disable 3-8 decoder
 
   pinMode(A0, INPUT); // coil inputs
   pinMode(A1, INPUT); // coil inputs
@@ -173,6 +199,13 @@ void setupIO() {
 
 }
 
+//###############################
+//  Watchdog Interrupt
+//###############################
+ISR (WDT_vect)
+{
+  wdt_disable();  // disable watchdog
+}  // end of WDT_vect
 
 
 
@@ -199,9 +232,10 @@ void setup ()
 
   setupIO();
 
-  delay(1000);
 
-  //goToSleep();
+  delay(200);
+  readCoilsPress = true;
+  //goToSleep(0);
 }
 
 
@@ -210,34 +244,54 @@ void setup ()
 //###############################
 //  Runs everytime it wakes
 //###############################
-int letraLida = 0;
+bool showDisplay = true;
+
 
 void loop ()
 {
+  // this is used if only one char is to be read per wake up
+  //  charBeingRead++;
+  //  if (charBeingRead >= 8) {
+  //    charBeingRead = 0;
+  //    display.clearDisplay();
+  //    display.setCursor(16, 16);
+  //  }
 
+  if (readCoilsPress) {
+    for (uint8_t charBeingRead = 0; charBeingRead < 8; charBeingRead++) {
+      setDecoder(charBeingRead); // drive the decoder
+      chars[charBeingRead] = readCoils();
 
-  charBeingRead++;
-  if (charBeingRead >= 8) {
-    charBeingRead = 0;
-    display.clearDisplay();
-    display.setCursor(16, 16);
+    }
   }
 
 
+  display.clearDisplay();
+  display.setCursor(16, 16);
 
-  setDecoder(charBeingRead); // drive the decoder
-  chars[charBeingRead] = readCoils();
+  if (showDisplay) {
+    showDisplay = false;
+    if (readCoilsPress) {
+      for (uint8_t charBeingRead = 0; charBeingRead < 8; charBeingRead++) {
+        display.print(intToChar[chars[charBeingRead]]);
+        display.display();
+      }
+      readCoilsPress = false;
+    }
+    else {
+      for (uint8_t charBeingRead = 0; charBeingRead < 8; charBeingRead++) {
+        display.print(intToChar[chars[charBeingRead]]);
+      }
+      display.display();
+    }
+    sleepLength = 2;
+  }
+  else {
+    showDisplay = true;
+    sleepLength = 2;
+    display.display();
+  }
 
-
-  //letraLida = readCoils(); // read the coil inputs
-
-  //delay(100);
-
-
-  display.print(intToChar[chars[charBeingRead]]);
-  display.display();
-
-
-  //goToSleep(); // go back to sleep
+  goToSleep(1); // go back to sleep
 }
 
